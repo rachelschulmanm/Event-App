@@ -1,62 +1,51 @@
-import React from "react";
-
-import axios from "axios";
-import React, { useEffect } from "react";
-
-export const getAllShoes = async () => {
-  try {
-    const res = await axios.get(
-      "https://63fc6c4e8ef914c555971d53.mockapi.io/api/shoes/"
-    );
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
+import React, { useEffect, useState } from "react";
+import { getAllFlowers } from "../api/api";
+import Grid from "@mui/material/Grid";
+import FlowerCard from "./FlowerCard";
+import Button from "@mui/material/Button";
+import { UseEvent, UseEventUpdate } from "../context/EventContext";
+import { updateEvent } from "../api/api";
+const FlowerDesign = () => {
+  const event = UseEvent();
+  const eventUpdate = UseEventUpdate();
+  const [flowers, setFlowers] = useState([]);
+  const [choosedFlowers, setChoosedFlowers] = useState([]);
+  const fetchFlowers = async () => {
+    const flowersData = await getAllFlowers();
+    setFlowers(flowersData);
+  };
+  useEffect(() => {
+    fetchFlowers();
+  }, []);
+  const handleSubmit = async () => {
+    const changeEvent = { ...event };
+    changeEvent.flowers = choosedFlowers;
+    const updatedEvent = await updateEvent(event.id, changeEvent);
+    eventUpdate(updatedEvent);
+  };
+  return (
+    <Grid container>
+      {flowers &&
+        flowers.map((flower, index) => {
+          return (
+            <FlowerCard
+              key={index}
+              flower={flower}
+              choosedFlowers={choosedFlowers}
+              setChoosedFlowers={setChoosedFlowers}
+            ></FlowerCard>
+          );
+        })}
+      <Button
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleSubmit}
+      >
+        Set Flower Design
+      </Button>
+    </Grid>
+  );
 };
 
-export const getShoeById = async (id) => {
-  try {
-    const res = await axios.get(
-      `https://63fc6c4e8ef914c555971d53.mockapi.io/api/shoes/` + id
-    );
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const addShoe = async (body) => {
-  try {
-    const res = await axios.post(
-      `https://63fc6c4e8ef914c555971d53.mockapi.io/api/shoes/`,
-      body
-    );
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const updateShoeById = async (id, body) => {
-  try {
-    const res = await axios.put(
-      `https://63fc6c4e8ef914c555971d53.mockapi.io/api/shoes/${id}`,
-      body
-    );
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const deleteShoeById = async (id) => {
-  try {
-    const res = await axios.delete(
-      `https://63fc6c4e8ef914c555971d53.mockapi.io/shoes/${id}`
-    );
-    console.log(res);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+export default FlowerDesign;

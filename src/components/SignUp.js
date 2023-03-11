@@ -1,4 +1,4 @@
-import  React  from "react";
+import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -7,26 +7,21 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Controller, useForm } from "react-hook-form";
-import {getAllUsers } from "../api/api";
-import { UserContext } from "../App";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
 import * as yup from "yup";
-import {UseUser,UseUserUpdate} from '../context/UserContext'
-
+import {addUser} from "../api/api"
 YupPassword(yup);
 
+const theme = createTheme();
 
-const Login = ({handleClose={handleClose}}) => {
-
-  const user = UseUser()
-  const updateUser=UseUserUpdate()
-  console.log(updateUser)
-
-  const schema = yup
+const SignUp = () => {
+    const schema = yup
     .object()
     .shape({
+      fullName: yup.string().required(),
       email: yup.string().email().required(),
       password: yup.string().password(),
     })
@@ -39,31 +34,18 @@ const Login = ({handleClose={handleClose}}) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
     },
   });
-
   const onSubmit = async (data) => {
-    const users = await getAllUsers();
-    const result = users.filter((user) => {
-      return user.email === data.email && user.password === data.password;
-    });
-    console.log(result);
-    if (result.length) {
-      updateUser(result[0]);
-      console.log(user);
-      handleClose()
-      alert("you are logged in");
-      localStorage.setItem('user', JSON.stringify(result[0].id));
-
-    } else {
-      alert("no such a user");
-    }
-  };
+    console.log(data)
+    await addUser(data);
+};
 
   return (
-    
+    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -78,7 +60,7 @@ const Login = ({handleClose={handleClose}}) => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Login
+            Sign Up
           </Typography>
           <Box
             component="form"
@@ -86,6 +68,26 @@ const Login = ({handleClose={handleClose}}) => {
             noValidate
             sx={{ mt: 1 }}
           >
+            <Controller
+              name={"fullName"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Full Name"
+                  name="name"
+                  autoFocus
+                  onChange={onChange}
+                  value={value}
+                  error={errors.fullName?.message}
+                  helperText={errors.fullName?.message}
+                />
+              )}
+            />
+
             <Controller
               name={"email"}
               control={control}
@@ -133,7 +135,7 @@ const Login = ({handleClose={handleClose}}) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit(onSubmit)}
             >
-              Login
+              Sign Up
             </Button>
             <Button
               fullWidth
@@ -146,6 +148,7 @@ const Login = ({handleClose={handleClose}}) => {
           </Box>
         </Box>
       </Container>
+    </ThemeProvider>
   );
 };
-export default Login;
+export default SignUp;
