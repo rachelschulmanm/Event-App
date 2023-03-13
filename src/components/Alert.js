@@ -24,6 +24,7 @@ const Alert = ({ text, type, setAlert }) => {
 
   useEffect(() => {
     notify();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>

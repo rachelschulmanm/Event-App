@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ReactComponent as TableIcon } from "../icons/tableBig.svg";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {  Draggable } from "react-beautiful-dnd";
 
 const Table = ({ position, setPlan,index }) => {
   const [tableGroupName, setTableGroupName] = useState("");

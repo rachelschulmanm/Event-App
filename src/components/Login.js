@@ -18,7 +18,7 @@ import {UseUser,UseUserUpdate} from '../context/UserContext'
 YupPassword(yup);
 
 
-const Login = ({handleClose={handleClose}}) => {
+const Login = ({handleClose}) => {
 
   const user = UseUser()
   const updateUser=UseUserUpdate()

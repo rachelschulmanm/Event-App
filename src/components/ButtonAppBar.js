@@ -82,6 +82,7 @@ export default function ButtonAppBar() {
     if (id) {
       fetchUserById(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Box sx={{ display: "flex" }} className={isLand ? "main" : "none"}>
@@ -279,8 +280,10 @@ export default function ButtonAppBar() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {isLand ? <span className="welcome">welcome to event app </span> : null}
-{        //render the page selected by navigation
-}        <Outlet></Outlet>
+        {
+          //render the page selected by navigation
+        }{" "}
+        <Outlet></Outlet>
         {alert === true ? (
           <Alert
             text={"hey you need to Login first"}

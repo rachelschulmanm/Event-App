@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -45,7 +45,7 @@ export default function MaterialUIPickers() {
     setUserEvents(usersEventsSceduled);
     console.log("user", usersEventsSceduled);
   };
-  const getAllSceduledEvents = async () => {
+  const getAllSceduledEvents = useCallback(async () => {
     //GET ALL EVENTS
     const events = await getAllEvents();
     getAllUsersEvents(events);
@@ -55,10 +55,11 @@ export default function MaterialUIPickers() {
       })
       .map((event) => event.dateEvent?.split("T")[0]);
     setSceduledEvents(sceduledEvents);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     getAllSceduledEvents();
-  }, []);
+  }, [getAllSceduledEvents]);
 
   const handleTypeChange = (e) => {
     setType(e.target.value);
@@ -101,7 +102,6 @@ export default function MaterialUIPickers() {
               onChange={handleChange}
               renderInput={(params) => <TextField {...params} />}
               renderDay={(day, _value, DayComponentProps) => {
-
                 //CHECK IF sceduledEvents
                 const isSelected =
                   !DayComponentProps.outsideCurrentMonth &&
