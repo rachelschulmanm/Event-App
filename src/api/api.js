@@ -46,6 +46,16 @@ export const addEvent = async (event) => {
     console.log(error);
   }
 };
+export const deleteEventApi = async (eventId) => {
+  try {
+    const res = await axios.delete(
+      `https://640077049f84491029917166.mockapi.io/api/events/${eventId}`
+    );
+    return res.data
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const updateEvent = async (eventId, event) => {
   try {
     const res = await axios.put(

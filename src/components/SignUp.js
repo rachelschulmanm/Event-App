@@ -12,13 +12,13 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
 import * as yup from "yup";
-import {addUser} from "../api/api"
+import { addUser } from "../api/api";
 YupPassword(yup);
 
 const theme = createTheme();
 
 const SignUp = () => {
-    const schema = yup
+  const schema = yup
     .object()
     .shape({
       fullName: yup.string().required(),
@@ -40,9 +40,12 @@ const SignUp = () => {
     },
   });
   const onSubmit = async (data) => {
-    console.log(data)
-    await addUser(data);
-};
+    try {
+      console.log(data);
+      await addUser(data);
+      alert("you are signed up");
+    } catch (e) {}
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -123,7 +126,7 @@ const SignUp = () => {
                   autoComplete="current-password"
                   onChange={onChange}
                   value={value}
-                  error={errors.password?.message}
+                  error={errors.password?.message ? true : false}
                   helperText={errors.password?.message}
                 />
               )}

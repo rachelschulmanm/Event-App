@@ -14,7 +14,7 @@ const Alert = ({ text, type, setAlert }) => {
   const notify = () =>
     toast[type](text, {
       position: "top-center",
-      autoClose: 5000,
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

@@ -1,6 +1,4 @@
 import "./App.css";
-import { useState, createContext } from "react";
-import ButtonAppBar from "./components/ButtonAppBar";
 import { createTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 import { ThemeProvider } from "@emotion/react";
@@ -13,7 +11,7 @@ import { router } from "./router/router";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#f65e59",
+      main: "#d69316",
     },
     secondary: {
       main: green[500],

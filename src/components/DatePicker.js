@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
-import dayjs from "dayjs";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -18,10 +17,10 @@ import { UseUser } from "../context/UserContext";
 import { UseEventUpdate } from "../context/EventContext";
 export default function MaterialUIPickers() {
   const user = UseUser();
-  const updateEvent= UseEventUpdate();
+  const updateEvent = UseEventUpdate();
   //INITIAL DATE
   const [value, setValue] = useState(new Date());
-  const [type, setType] = useState();
+  const [type, setType] = useState(1);
   // ALL FUTERED SCEDULED EVENTS
   const [sceduledEvents, setSceduledEvents] = useState([]);
   // ALL USERS EVEVNTS
@@ -34,7 +33,7 @@ export default function MaterialUIPickers() {
     return event.dateEvent >= new Date().toISOString();
   };
   const filterByUser = (event) => {
-    return event.userId ===user.id;
+    return event.userId === user.id || event.userId === user.id?.toString();
   };
 
   const getAllUsersEvents = (events) => {
@@ -49,7 +48,6 @@ export default function MaterialUIPickers() {
   const getAllSceduledEvents = async () => {
     //GET ALL EVENTS
     const events = await getAllEvents();
-    console.log(events);
     getAllUsersEvents(events);
     const sceduledEvents = events
       .filter((event) => {
@@ -66,17 +64,20 @@ export default function MaterialUIPickers() {
     setType(e.target.value);
   };
   const sceduleEvent = async () => {
-    try {
-      const event = {
-        userId: user.id,
-        type: type,
-        dateEvent: value,
-      };
-     const newEvent= await addEvent(event);
-      alert("added event");
-      updateEvent(newEvent);
-    } catch (error) {
-      console.log(error);
+    console.log(sceduledEvents, value);
+    if (!sceduledEvents.includes(value)) {
+      try {
+        const event = {
+          userId: user.id,
+          type: type,
+          dateEvent: value,
+        };
+        const newEvent = await addEvent(event);
+        alert("added event");
+        updateEvent(newEvent);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (
@@ -88,7 +89,7 @@ export default function MaterialUIPickers() {
         alignItems: "center",
       }}
     >
-     <form>
+      <form>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Stack spacing={3}>
             <DesktopDatePicker
@@ -100,6 +101,7 @@ export default function MaterialUIPickers() {
               onChange={handleChange}
               renderInput={(params) => <TextField {...params} />}
               renderDay={(day, _value, DayComponentProps) => {
+
                 //CHECK IF sceduledEvents
                 const isSelected =
                   !DayComponentProps.outsideCurrentMonth &&
@@ -112,22 +114,22 @@ export default function MaterialUIPickers() {
                   DayComponentProps.disabled = true;
                 }
                 return (
-                  <>
+                  <React.Fragment key={day.$d.toISOString()}>
                     {userSelected ? (
                       <StyledBadgeUser
-                        key={day.toString()}
+                        key={day.$d.toString()}
                         //overlap="circular"
                         badgeContent={" "}
                       ></StyledBadgeUser>
                     ) : isSelected ? (
                       <StyledBadge
-                        key={day.toString()}
+                        key={day.$d}
                         //overlap="circular"
                         badgeContent={" "}
                       ></StyledBadge>
                     ) : null}
                     <PickersDay {...DayComponentProps} />
-                  </>
+                  </React.Fragment>
                 );
               }}
             />

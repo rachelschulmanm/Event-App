@@ -1,4 +1,4 @@
-import React ,{useEffect} from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,17 +14,14 @@ const FlowerCard = ({ flower, choosedFlowers, setChoosedFlowers }) => {
         setChoosedFlowers((prev) => [...prev, flower.id]);
       }
     } else {
-      const copy=[...choosedFlowers]
+      const copy = [...choosedFlowers];
       const index = copy.indexOf(flower.id);
       if (index > -1) {
         // only splice array when item is found
         copy.splice(index, 1); // 2nd parameter means remove one item only
         setChoosedFlowers(copy);
-
       }
     }
-    
-
   };
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -45,7 +42,7 @@ const FlowerCard = ({ flower, choosedFlowers, setChoosedFlowers }) => {
       <CardActions>
         <FormControlLabel
           control={
-            <Checkbox onClick={handleUpdate}  checkedIcon={<Favorite />} />
+            <Checkbox onClick={handleUpdate} checkedIcon={<Favorite />} />
           }
           label={"Choose " + flower.name}
         />
